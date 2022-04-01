@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Utils } from 'src/common/utils';
 import { Repository } from 'typeorm';
+import { ProfileService } from '../profile/profile.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -11,10 +12,13 @@ export class UserService {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    private readonly profileService: ProfileService
   ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+
+    const { id_profile } = createUserDto
 
     const user = this.userRepository.create(createUserDto)
 
@@ -22,7 +26,21 @@ export class UserService {
 
     user.name = Utils.getInstance().getValidName(user.name)
 
+    const isRegistered = await this.findByName(user.name)
+
+    if (isRegistered) {
+      throw new BadRequestException('Usuário já cadastrado!!')
+    }
+
     user.password = await Utils.getInstance().encryptPassword(user.password)
+
+    const profile = await this.profileService.findOne(id_profile)
+
+    if (!profile) {
+      throw new NotFoundException('Perfil escolhido é inválido!!')
+    }
+
+    user.profile = profile
 
     return this.userRepository.save(user)
 
@@ -40,6 +58,12 @@ export class UserService {
       }
     })
 
+  }
+
+  async findByName(name: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: { name, isActive: true }
+    })
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

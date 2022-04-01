@@ -18,6 +18,8 @@ export class ProfileService {
 
     const profile = this.profileRepository.create(createProfileDto)
 
+    profile.isActive = true
+
 
     return this.profileRepository.save(profile)
   }

@@ -1,5 +1,5 @@
 import { Profile } from "src/components/profile/entities/profile.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 
 @Entity('user')
@@ -17,16 +17,17 @@ export class User {
     @Column()
     password: string
 
-    @Column({name:'is_active'})
+    @Column({ name: 'is_active' })
     isActive: boolean
 
-    @CreateDateColumn({name:'create_at'})
+    @CreateDateColumn({ name: 'create_at' })
     createAt: string
 
-    @UpdateDateColumn({name:'update_at'})
+    @UpdateDateColumn({ name: 'update_at' })
     updateAt: string
 
-    @ManyToOne(()=> Profile, (profile) => profile.users)
+    @ManyToOne(() => Profile, (profile) => profile.users)
+    @JoinColumn({name:'id_profile'})
     profile: Profile
 
 
