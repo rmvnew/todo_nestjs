@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Profile } from "src/components/profile/entities/profile.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 
 @Entity('user')
@@ -24,6 +25,9 @@ export class User {
 
     @UpdateDateColumn({name:'update_at'})
     updateAt: string
+
+    @ManyToOne(()=> Profile, (profile) => profile.users)
+    profile: Profile
 
 
 }
