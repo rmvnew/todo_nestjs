@@ -14,7 +14,7 @@ export class User {
     @Column()
     email: string
 
-    @Column()
+    @Column({ select: false })
     password: string
 
     @Column({ name: 'is_active' })
@@ -27,7 +27,7 @@ export class User {
     updateAt: string
 
     @ManyToOne(() => Profile, (profile) => profile.users)
-    @JoinColumn({name:'id_profile'})
+    @JoinColumn({ name: 'id_profile' })
     profile: Profile
 
 

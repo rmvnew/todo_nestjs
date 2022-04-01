@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { FilterUser } from './dto/filter.user';
 
 @ApiTags('Users')
 @Controller('user')
@@ -18,8 +20,15 @@ export class UserController {
   }
 
   @Get()
-  async findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  async findAll(
+    @Query() filter: FilterUser
+  ): Promise<Pagination<User>> {
+
+    const { limit } = filter
+
+    filter.limit = limit > 10 ? 10 : limit
+
+    return this.userService.findAll(filter);
   }
 
   @Get(':id')

@@ -1,9 +1,12 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { paginate, Pagination } from 'nestjs-typeorm-paginate';
+import { SortingType } from 'src/common/enums';
 import { Utils } from 'src/common/utils';
 import { Repository } from 'typeorm';
 import { ProfileService } from '../profile/profile.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { FilterUser } from './dto/filter.user';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
@@ -46,8 +49,37 @@ export class UserService {
 
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.find()
+  async findAll(filter : FilterUser): Promise<Pagination<User>> {
+    const { name, orderBy, sort } = filter
+    const queryBuilder = this.userRepository.createQueryBuilder('inf')
+    .leftJoinAndSelect('inf.profile','profile')
+      .where('inf.is_active = true')
+
+    if (name) {
+      return paginate<User>(
+        queryBuilder.where('inf.name like :name', { name: `%${name.toUpperCase()}%` })
+          .andWhere('inf.is_active = true'), filter
+      )
+    }
+
+    if (orderBy == SortingType.ID) {
+
+      queryBuilder.orderBy('inf.iduser', `${sort === 'DESC' ? 'DESC' : 'ASC'}`)
+        .where('inf.is_active = true')
+
+    } else if (orderBy == SortingType.DATE) {
+
+      queryBuilder.orderBy('inf.create_at', `${sort === 'DESC' ? 'DESC' : 'ASC'}`)
+        .where('inf.is_active = true')
+
+    } else {
+
+      queryBuilder.orderBy('inf.name', `${sort === 'DESC' ? 'DESC' : 'ASC'}`)
+        .where('inf.is_active = true')
+
+    }
+
+    return paginate<User>(queryBuilder, filter)
   }
 
   async findOne(id: number) {
