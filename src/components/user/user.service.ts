@@ -29,6 +29,8 @@ export class UserService {
 
     user.name = Utils.getInstance().getValidName(user.name)
 
+    Utils.getInstance().getValidateEmail(user.email)
+
     const isRegistered = await this.findByName(user.name)
 
     if (isRegistered) {
@@ -49,10 +51,10 @@ export class UserService {
 
   }
 
-  async findAll(filter : FilterUser): Promise<Pagination<User>> {
+  async findAll(filter: FilterUser): Promise<Pagination<User>> {
     const { name, orderBy, sort } = filter
     const queryBuilder = this.userRepository.createQueryBuilder('inf')
-    .leftJoinAndSelect('inf.profile','profile')
+      .leftJoinAndSelect('inf.profile', 'profile')
       .where('inf.is_active = true')
 
     if (name) {
@@ -90,6 +92,14 @@ export class UserService {
       }
     })
 
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: {
+        email, isActive: true
+      }
+    })
   }
 
   async findByName(name: string): Promise<User> {

@@ -1,3 +1,6 @@
+
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/shared/auth.service';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -6,6 +9,7 @@ import { ProfileModule } from './components/profile/profile.module';
 
 @Module({
   imports: [
+    AuthModule,
     ConfigModule.forRoot(),
     UserModule,
     TypeOrmModule.forRoot({
@@ -23,4 +27,4 @@ import { ProfileModule } from './components/profile/profile.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

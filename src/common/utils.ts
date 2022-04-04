@@ -31,7 +31,7 @@ export class Utils {
     }
 
     getValidateEmail(email: string) {
-        if (!this.validateRegex(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i, email)) {
+        if (!this.validateRegex(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+/i, email)) {
             throw new BadRequestException('O email informado não é válido!!')
         }
     }
@@ -43,6 +43,10 @@ export class Utils {
     async encryptPassword(pass: string) {
         const saltOrRounds = 10;
         return await bcrypt.hash(pass, saltOrRounds)
+    }
+
+    async isMatchHash(value: string, hash: string): Promise<Boolean> {
+        return await bcrypt.compare(value, hash);
     }
 
 }
