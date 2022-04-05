@@ -49,4 +49,23 @@ export class Utils {
         return await bcrypt.compare(value, hash);
     }
 
+    getDate(date: string): Date {
+
+        let newData = date.replace(/(\d+[/])(\d+[/])/, '$2$1');
+        return new Date(newData);
+
+    }
+
+
+    getFormatedUsDate(date: string) {
+
+        const currentDate = date.split('/')
+        const day = currentDate[0]
+        const month = currentDate[1]
+        const year = currentDate[2]
+        return new Date(`${year}/${month}/${day}`)
+
+    }
+
+
 }

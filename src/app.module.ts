@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './components/user/user.module';
 import { ProfileModule } from './components/profile/profile.module';
+import { TodoModule } from './components/todo/todo.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { ProfileModule } from './components/profile/profile.module';
       autoLoadEntities: true,
       synchronize: true
     }),
-    ProfileModule
+    ProfileModule,
+    TodoModule
   ],
   controllers: [],
   providers: [],
