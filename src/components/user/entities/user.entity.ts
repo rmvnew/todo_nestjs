@@ -1,5 +1,6 @@
 import { Profile } from "src/components/profile/entities/profile.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Todo } from "src/components/todo/entities/todo.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 
 @Entity('user')
@@ -29,6 +30,9 @@ export class User {
     @ManyToOne(() => Profile, (profile) => profile.users)
     @JoinColumn({ name: 'id_profile' })
     profile: Profile
+
+    @OneToMany(() => Todo, (todo) => todo.user)
+    todos: Todo[]
 
 
 }

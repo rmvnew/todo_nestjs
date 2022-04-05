@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { User } from "src/components/user/entities/user.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 
 @Entity('todo')
@@ -22,5 +23,9 @@ export class Todo {
 
     @UpdateDateColumn({ name: 'update_at' })
     updateAt: string
+
+    @ManyToOne(() => User, (user) => user.todos)
+    @JoinColumn({name:'id_user'})
+    user: User
 
 }
