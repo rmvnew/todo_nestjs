@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './components/user/user.module';
 import { ProfileModule } from './components/profile/profile.module';
-import { TodoModule } from './components/todo/todo.module';
+import { TodoModule } from './components/task/task.module';
 
 @Module({
   imports: [
