@@ -9,7 +9,7 @@ export class CreateTodoDto {
     id_user: number
 
     @ApiProperty()
-    task: string
+    task_name: string
 
     @ApiProperty()
     deadline: string

@@ -4,13 +4,13 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 
 
 @Entity('task')
-export class Task {
+export class TaskEntity {
 
     @PrimaryGeneratedColumn()
-    id_todo: number
+    id_task: number
 
     @Column()
-    task: string
+    task_name: string
 
     @Column('timestamp')
     deadline: Date
@@ -30,13 +30,23 @@ export class Task {
     status: StatusTasks
 
     @CreateDateColumn({ name: 'create_at' })
-    createAt: string
+    create_at: string
 
     @UpdateDateColumn({ name: 'update_at' })
-    updateAt: string
+    update_at: string
 
     @ManyToOne(() => User, (user) => user.tasks)
     @JoinColumn({ name: 'id_user' })
     user: User
+
+    // constructor(task?: Partial<TaskEntity>) {
+    //     this.id_task = task?.id_task
+    //     this.task = task?.task
+    //     this.deadline = task?.deadline
+    //     this.priority = task?.priority
+    //     this.status = task?.status
+    //     this.createAt = task?.createAt
+    //     this.updateAt = task?.updateAt
+    // }
 
 }

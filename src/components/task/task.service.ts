@@ -6,27 +6,29 @@ import { Not, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { CreateTodoDto } from './dto/create-task.dto';
 import { UpdateTodoDto } from './dto/update-task.dto';
-import { Task } from './entities/task.entity';
+import { TaskEntity } from './entities/task.entity';
 
 @Injectable()
-export class TodoService {
+export class TaskService {
 
   constructor(
-    @InjectRepository(Task)
-    private readonly todoRepository: Repository<Task>,
+    @InjectRepository(TaskEntity)
+    private readonly taskRepository: Repository<TaskEntity>,
     private readonly userService: UserService
   ) { }
 
 
-  async create(createTodoDto: CreateTodoDto): Promise<Task> {
+  async create(createTodoDto: CreateTodoDto): Promise<TaskEntity> {
 
     const { deadline, id_user } = createTodoDto
 
-    const todo = this.todoRepository.create(createTodoDto)
+    const task = this.taskRepository.create(createTodoDto)
 
-    todo.deadline = Utils.getInstance().getDate(deadline)
+    task.deadline = Utils.getInstance().getDate(deadline)
 
-    todo.task = Utils.getInstance().getValidName(todo.task)
+    task.task_name = Utils.getInstance().getValidName(task.task_name)
+
+    Utils.getInstance().verifyLength(task.task_name,4,20)
 
     const user = await this.userService.findOne(id_user)
 
@@ -34,44 +36,44 @@ export class TodoService {
       throw new NotFoundException('Usuário não encontrado!')
     }
 
-    todo.user = user
+    task.user = user
 
-  
 
-    return this.todoRepository.save(todo)
+
+    return this.taskRepository.save(task)
   }
 
-  async findAll(): Promise<Task[]> {
-    return await this.todoRepository.find({
+  async findAll(): Promise<TaskEntity[]> {
+    return await this.taskRepository.find({
       where: {
         status: Not(StatusTasks.DONE)
       }
     })
   }
 
-  async findOne(id: number): Promise<Task> {
-    return await this.todoRepository.findOne({
+  async findOne(id: number): Promise<TaskEntity> {
+    return await this.taskRepository.findOne({
       where: {
-        id_todo: id, status: Not(StatusTasks.DONE)
+        id_task: id, status: Not(StatusTasks.DONE)
       }
     })
   }
 
-  async update(id: number, updateTodoDto: UpdateTodoDto): Promise<Task> {
+  async update(id: number, updateTodoDto: UpdateTodoDto): Promise<TaskEntity> {
 
     const isRegistered = this.findOne(id)
     if (!isRegistered) {
       throw new NotFoundException('task não existe')
     }
 
-    const todo = await this.todoRepository.preload({
-      id_todo: id,
+    const todo = await this.taskRepository.preload({
+      id_task: id,
       ...updateTodoDto
     })
 
 
 
-    return this.todoRepository.save(todo)
+    return this.taskRepository.save(todo)
   }
 
   async remove(id: number) {
@@ -81,6 +83,6 @@ export class TodoService {
       throw new NotFoundException('task não existe')
     }
 
-    await this.todoRepository.remove(todo)
+    await this.taskRepository.remove(todo)
   }
 }

@@ -1,5 +1,5 @@
 import { Profile } from "src/components/profile/entities/profile.entity";
-import { Task } from "src/components/task/entities/task.entity";
+import { TaskEntity } from "src/components/task/entities/task.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 
@@ -31,8 +31,8 @@ export class User {
     @JoinColumn({ name: 'id_profile' })
     profile: Profile
 
-    @OneToMany(() => Task, (task) => task.user)
-    tasks: Task[]
+    @OneToMany(() => TaskEntity, (task) => task.user)
+    tasks: TaskEntity[]
 
 
 }

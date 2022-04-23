@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { SortingType } from 'src/common/enums';
+import { SortingType, ValidType } from 'src/common/enums';
 import { Utils } from 'src/common/utils';
 import { Repository } from 'typeorm';
 import { ProfileService } from '../profile/profile.service';
@@ -29,7 +29,7 @@ export class UserService {
 
     user.name = Utils.getInstance().getValidName(user.name)
 
-    Utils.getInstance().getValidateEmail(user.email)
+    Utils.getInstance().validateWithRegex(user.email, ValidType.IS_EMAIL)
 
     const isRegistered = await this.findByName(user.name)
 
