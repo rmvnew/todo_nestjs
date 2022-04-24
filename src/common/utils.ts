@@ -39,7 +39,16 @@ export class Utils {
 
     getDate(date: string): Date {
 
+        this.validateWithRegex(date, ValidType.DATE)
+
         let newData = date.replace(/(\d+[/])(\d+[/])/, '$2$1');
+
+        const dateSplited = newData.split('/')
+        
+        if (Number(dateSplited[0]) > 12 || Number(dateSplited[1]) > 31) {
+            throw new BadRequestException('Data informáda inválida!!')
+        }
+
         return new Date(newData);
 
     }
@@ -73,8 +82,8 @@ export class Utils {
             }
 
             if (data === ValidType.NO_SPACE) {
-                if (this.validRegex(/\s+/g, str)) {
-                    throw new BadRequestException(`O nome ${str}, não pode conter espaços em branco!!`)
+                if (this.validRegex(/\s +/g, str)) {
+                    throw new BadRequestException(`O nome ${str}, não pode conter 2 ou mais espaços em branco!!`)
                 }
             }
 
@@ -87,6 +96,12 @@ export class Utils {
             if (data === ValidType.IS_EMAIL) {
                 if (this.validRegex(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+/i, str)) {
                     throw new BadRequestException('O email informado não é válido!!')
+                }
+            }
+
+            if (data === ValidType.DATE) {
+                if (!this.validRegex(/\d{2}\/\d{2}\/\d{4}/g, str)) {
+                    throw new BadRequestException(`Data ${str} está em um formato inválido!`)
                 }
             }
 

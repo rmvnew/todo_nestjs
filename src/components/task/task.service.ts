@@ -28,7 +28,7 @@ export class TaskService {
 
     task.task_name = Utils.getInstance().getValidName(task.task_name)
 
-    Utils.getInstance().verifyLength(task.task_name,4,20)
+    Utils.getInstance().verifyLength(task.task_name,4,40)
 
     const user = await this.userService.findOne(id_user)
 

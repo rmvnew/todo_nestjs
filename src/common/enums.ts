@@ -21,6 +21,7 @@ export enum ValidType {
     IS_STRING = 'IS_STRING',
     IS_NUMBER = 'IS_NUMBER',
     NO_SPECIAL_CHARACTER = 'NO_SPECIAL_CHARACTER',
-    IS_EMAIL = 'IS_EMAIL'
+    IS_EMAIL = 'IS_EMAIL',
+    DATE = 'DATE'
 
 }
